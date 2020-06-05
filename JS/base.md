@@ -68,4 +68,6 @@ Object.defineProperty(x, 1, {
 ```
 Vue源码正是通过这种方式实现了访问属性时收集依赖，设置属性时源码有一句dep.notify，里面便是通知视图更新的相关操作。
 
-
+#### 闭包
+[参考]（https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures）
+> 闭包是由函数以及声明该函数的词法环境组合而成。该环境包含了闭包创建时作用域内的任何局部变量。
