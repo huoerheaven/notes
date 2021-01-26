@@ -74,9 +74,9 @@ body {
 .box {
   @include border-radius(10px);
 }
+~~~
 ##### 5.继承
 > 继承是SASS中非常重要的一个特性，可以通过@extend指令在选择器之间复用CSS属性，并且不会产生冗余的代码，下面例子将会通过SASS提供的继承机制建立一系列样式：
-
 ~~~
 // 这段代码不会被输出到最终生成的CSS文件，因为它没有被任何代码所继承。
 %other-styles {
@@ -99,6 +99,7 @@ body {
   @extend %message-common;
   border-color: green;
 }
+~~~
 
 ##### 6. 操作符
 > SASS提供了标准的算术运算符，例如+、-、*、/、%。在接下来的例子里，我们尝试在aside和article选择器当中对宽度进行简单的计算。
