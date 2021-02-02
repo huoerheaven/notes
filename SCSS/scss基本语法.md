@@ -173,4 +173,25 @@ a {
   font-weight: bold; 
 }
 ~~~
+### 三、知识点
+##### 1. !default
+> !default表示默认值。给一个未通过!default声明赋值的变量赋值，此时，如果变量已经被赋值，不会再被重新赋值;但是如果变量还没有被赋值，则会被赋予新的值。
+~~~
+//
+$color: #000;
+$color: #fff !default;
+//
+$background-color: #ccc !default;
+$background-color: #ddd !default;
+.test {
+    color: $color;
+    background: $background-color;
+}
+ 
+// css style
+.test {
+    color: #000;
+    background: #ccc;
+}
+~~~
 
