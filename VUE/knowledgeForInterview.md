@@ -55,6 +55,77 @@ export default {
 </script>
 ```
 > 总结：子组件的model属性prop默认是value,event默认是input。
+
+#### slot
+1. 基本使用
+2. 作用域插槽
+3. 具名插槽
+> 单个插槽
+```
+parent component
+<Child url="/profile">
+  Your Profile
+</Child>
+child component
+<a
+  v-bind:href="url"
+  class="nav-link"
+>
+  <slot></slot>
+</a>
+```
+> 作用域插槽(父组件能拿到子组件的数据)  
+> 有时让插槽内容能够访问子组件中才有的数据是很有用的  
+> [vue中slot详解](https://cn.vuejs.org/v2/guide/components-slots.html)  
+> 为了让 user 在父级的插槽内容中可用，我们可以将 user 作为 <slot> 元素的一个 attribute 绑定上去：
+```
+<span>
+  <slot v-bind:user="user">
+    {{ user.lastName }}
+  </slot>
+</span>
+```
+> 绑定在 <slot> 元素上的 attribute 被称为插槽 prop。现在在父级作用域中，我们可以使用带值的 v-slot 来定义我们提供的插槽 prop 的名字：
+```
+<current-user>
+  <template v-slot:default="slotProps">
+    {{ slotProps.user.firstName }}
+  </template>
+</current-user>
+```
+> 在这个例子中，我们选择将包含所有插槽 prop 的对象命名为 slotProps，但你也可以使用任意你喜欢的名字。
+  
+> 具名插槽
+```
+parent component
+<Child>
+  <template v-slot:header>
+    <h1>Here might be a page title</h1>
+  </template>
+
+  <template v-slot:default or 什么也不写>
+    <p>A paragraph for the main content.</p>
+    <p>And another one.</p>
+  </template>
+
+  <template v-slot:footer>
+    <p>Here's some contact info</p>
+  </template>
+</Child>
+child component
+<div class="container">
+  <header>
+    <slot name="header"></slot>
+  </header>
+  <main>
+    <slot></slot>
+  </main>
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
+</div>
+```
+
 #### vue如何异步加载组件
 1. import()函数
 2. 按需加载，异步加载组件(什么时候用什么时候加载)
