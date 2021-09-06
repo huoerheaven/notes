@@ -50,7 +50,7 @@ const app = Vue.createApp({
 ```
 #### 三、数据、方法、计算属性和侦听器（data & methods & computed & watcher）
 1. 计算属性computed和方法methods的区别
-> computed:当计算属性依赖的内容发生变更时，才会重新执行计算  (内部带有缓存的机制，页面渲染更高效)
+> computed:当计算属性依赖的内容发生变更时，才会重新执行计算  (内部带有缓存的机制，页面渲染更高效)  
 > methods:只要页面重新渲染，就会重新计算（不高效）
 ```
 const app = Vue.createApp({
@@ -76,6 +76,12 @@ const app = Vue.createApp({
 ```
 2. 侦察器watcher和计算属性computed的区别
 > watcher用来处理异步操作。如果没有异步操作，优先使用computed，比较方便；如果有异步操作，则使用watcher.
-
- 
+#### 四、事件绑定
+1. 事件修饰符：stop,prevent,capture,self,once,passive
+2. 按键修饰符：enter,tab,delete,esc,up,down,left,right
+3. 鼠标修饰符：left,right,middle
+4. 精确修饰符：exact
+#### 五、表单中双向绑定指令的使用
+1. input,textarea,checkbox,radio,select
+2. 修饰符：lazy,number,trim
 
