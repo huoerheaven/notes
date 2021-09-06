@@ -74,6 +74,8 @@ const app = Vue.createApp({
      template:`<div >{{message}}--{{total}}/{{getTotal()}}</div>`
 })
 ```
+2. 侦察器watcher和计算属性computed的区别
+> watcher用来处理异步操作。如果没有异步操作，优先使用computed，比较方便；如果有异步操作，则使用watcher.
 
  
 
