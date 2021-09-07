@@ -207,6 +207,8 @@ app.component("async-common-item",vue.defineAsyncComponent(()=>{
   })
 }))
 ```
+#### 十、provide / inject 
+
 
 
 
