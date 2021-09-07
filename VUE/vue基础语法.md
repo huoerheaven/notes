@@ -84,4 +84,129 @@ const app = Vue.createApp({
 #### 五、表单中双向绑定指令的使用
 1. input,textarea,checkbox,radio,select
 2. 修饰符：lazy,number,trim
+#### 六、组件的定义及特性
+1. 组件具有可复用性
+2. 全局组件
+#### 七、单向数据流的理解
+1. 父组件向子组件传值时，可以简化写法
+```
+//v-bind="params"
+//:a="params.a" :b="params.b" :c="params.c" :d="params.d"
+const app=Vue.createApp({
+  data(){
+    return {
+      params:{
+        a:11,
+        b:22,
+        c:33,
+        d:44
+      },
+      a:11,
+      b:22,
+      c:33,
+      d:44
+    }
+  },
+  template:`
+  <div><test :a="a" :b="b" :c="c" :d="d"/></div>
+  //等价于
+  <div><test v-bind="params" /></div>
+  `
+})
+app.component("test",{
+  props:{a,b,c,d},
+  template:`<div>{{a}}-{{b}}-{{c}}-{{d}}</div>`
+})
+```
+2.单向数据流的概念：子组件可以使用父组件传递过来的的数据，但是绝对不能修改传递过来的数据。  
+好处是避免组件间的数据耦合，维护性更好。
+#### 八、双向数据绑定的高级内容
+1. v-model
+```
+const app=Vue.createApp({
+  data(){
+    return {
+      count1:11,
+      count2:22,
+    }
+  },
+  template:`
+    <Counter v-model:count1="count1" v-model:count2="count2" />
+  `
+})
+app.component("Counter",{
+  props:["count1","count2"],
+  methods:{
+    handleClick1(){
+      this.$emit("update:count1",this.count1+1);
+    },
+    handleClick2(){
+      this.$emit("update:count2",this.count2+2;
+    }
+  }
+  template:`
+    <div @click="handleClick1">{{count1}}</div>
+    <div @click="handleClick2">{{count2}}</div>
+  `
+})
+```
+2. v-model 上的自定义修饰符
+```
+const app=Vue.createApp({
+  data(){
+    return {
+      count:"a"
+    }
+  },
+  template:`
+    <Counter v-model.uppercase="count" />
+  `
+})
+app.component("Counter",{
+  props:{
+    modelValue:"String",
+    modelModifiers:{
+      default:()=>{}
+    }
+  },
+  methods:{
+    handleClick(){
+      let newVal = this.modalValue + "b";
+      if(this.modelModifiers.uppercase){
+        newVal = newVal.uppercase();
+      }
+      this.$emit("update:count1",newVal);
+    }
+  }
+  template:`
+    <div @click="handleClick">{{count}}</div>
+  `
+})
+```
+#### 九、异步组件
+```
+const app=Vue.createApp({
+  template:`
+    <common-item />
+    //3s之后加载此异步组件
+    <async-common-item />
+  `
+})
+app.component("common-item",{
+  template:`
+    <div>common-item</div>
+  `
+});
+app.component("async-common-item",vue.defineAsyncComponent(()=>{
+  return new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+      resolve({
+        template:`<div>async-common-item</div>`
+      })
+    },3000)
+  })
+}))
+```
+
+
 
