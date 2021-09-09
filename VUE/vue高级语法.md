@@ -96,14 +96,13 @@ const myPlugin={
     app.provide("name","Weiwei");
     app.directive("focus",{});
     app.mixin({});
-    app.config.globalProperties.$sayHello = "hello world";
+    app.config.globalProperties.$sayHello = "hello world";//定义app的属性
   }
 };
 const app = Vue.createApp({
     inject:["name"]
     data(){
       return{
-        level:2
       }
     },
     mounted(){
@@ -114,4 +113,42 @@ const app = Vue.createApp({
     `
 });
 app.use(myPlugin,{a:"qqq"});//{a:"qqq"}就是options
+```
+> plugin案例：数据校验插件开发实例
+```
+const app = Vue.createApp({
+    data(){
+      return{
+          age:22,
+          name:"HuoWeiwei"
+      }
+    },
+    rules:{
+      age:{
+        validate:age=>age>25,
+        message:"age is too young"
+      },
+      name:{
+        validate:name=>name.length>5,
+        message:"name is too short"
+      },
+    },
+    mounted(){
+    },
+    template:`
+      <div>hello</div>
+    `
+});
+
+const validatePlugin={
+  install(app,options){}
+}
+//等价于
+const validatePlugin=(app,options)=>{}
+
+const validatePlugin(app,options){
+    mixin:{
+    }
+    
+}
 ```
