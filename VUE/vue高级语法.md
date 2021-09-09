@@ -31,3 +31,26 @@ const app = Vue.createApp({
 })
 ```
 > 自定义指令补充
+```
+const app = Vue.createApp({
+  data(){
+    reutrn{
+      instance:100
+    }
+  },
+  template:`
+    <div v-pos:right="instance">
+      <input v-focus />//v-focus是自定义指令
+    </div>
+  `
+  //全局自定义指令
+  app.directive("pos",{
+    mounted(el,binding){
+      el.style[bindign.arg] = binding.value+"px";//bindign.arg是v-pos:right="instance"的right,bindign.value是v-pos:right="instance"的instance
+    },
+    updated(el,binding){
+      el.style[bindign.arg] = binding.value+"px";//bindign.arg是v-pos:right="instance"的right,bindign.value是v-pos:right="instance"的instance
+    }
+  })
+})
+```
