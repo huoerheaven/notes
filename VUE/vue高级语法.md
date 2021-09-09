@@ -43,7 +43,9 @@ const app = Vue.createApp({
       <input v-focus />//v-focus是自定义指令
     </div>
   `
-  //全局自定义指令
+});
+
+//全局自定义指令
   app.directive("pos",{
     mounted(el,binding){
       el.style[bindign.arg] = binding.value+"px";//bindign.arg是v-pos:right="instance"的right,bindign.value是v-pos:right="instance"的instance
@@ -52,5 +54,23 @@ const app = Vue.createApp({
       el.style[bindign.arg] = binding.value+"px";//bindign.arg是v-pos:right="instance"的right,bindign.value是v-pos:right="instance"的instance
     }
   })
-})
+```
+#### teleport 传送门
+> 可以将将组件中的dom元素传送到其他位置
+```
+const app = Vue.createApp({
+  data(){
+    reutrn{
+      msg:"hello world"
+    }
+  },
+  template:`
+    <div class="area">
+      <button>点击</button>
+      <teleport to="body">//将mask传送到body.也可以写成to="#hello"
+          <div class="mask">我是蒙层</div>
+      </teleport>
+    </div>
+  `
+});
 ```
