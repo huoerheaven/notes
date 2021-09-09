@@ -89,4 +89,29 @@ const app = Vue.createApp({
     }
 });
 ```
-#### 插件的定义和使用
+#### 插件plugin,也是把通用性的功能封装起来
+```
+const myPlugin={
+  install(app,options){
+    app.provide("name","Weiwei");
+    app.directive("focus",{});
+    app.mixin({});
+    app.config.globalProperties.$sayHello = "hello world";
+  }
+};
+const app = Vue.createApp({
+    inject:["name"]
+    data(){
+      return{
+        level:2
+      }
+    },
+    mounted(){
+      console.log(this.$sayHello)
+    },
+    template:`
+      <div>hello</div>
+    `
+});
+app.use(myPlugin,{a:"qqq"});//{a:"qqq"}就是options
+```
