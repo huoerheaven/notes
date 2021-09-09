@@ -74,3 +74,19 @@ const app = Vue.createApp({
   `
 });
 ```
+#### 更加底层的render函数
+1. template->render->h函数->虚拟DOM(JS对象)->真实DOM->展示到页面上
+```
+const app = Vue.createApp({
+    data(){
+      return{
+        level:2
+      }
+    },
+    render(){
+      const {h} = Vue;
+      return h("h"+this.leval,{},["hello",h("h4",{},"h4")])
+    }
+});
+```
+#### 插件的定义和使用
