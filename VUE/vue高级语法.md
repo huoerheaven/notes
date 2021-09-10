@@ -146,9 +146,14 @@ const validatePlugin={
 //等价于
 const validatePlugin=(app,options)=>{}
 
-const validatePlugin(app,options){
-    mixin:{
-    }
+//vue组件自定义的属性 通过this.$options.xx获取到
+//vue组件自带的属性通过this.$XX获取到，比如this.$data,this.$watch
+const validatePlugin=(app,options)=>{
+    app.mixin({
+      create(){
+        for(let key in this.$option)
+      }
+    })
     
 }
 ```
