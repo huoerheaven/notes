@@ -58,3 +58,23 @@ const app=Vue.createApp({
   }
 })
 ```
+> toRef 
+```
+const app=Vue.createApp({
+  template:`
+    <div>{{obj.name}}</div>
+  `,
+  setup(props,context){
+    const {reactive,toRef} = Vue;
+    const obj = reactive({name:"huoweiwei"});
+    //toRefs
+    const age = toRefs(obj);//给age.value赋值时会报错，因为toRefs给age赋值成undefined
+    //toRef
+    const age = toRef(obj,"age");//给age.value赋值时不会报错，因为toRef会给age复制成null
+    setTimeout(()=>{
+      age.value = 18;
+    },2000);
+    return {obj}
+  }
+})
+```
