@@ -62,7 +62,7 @@ const app=Vue.createApp({
 ```
 const app=Vue.createApp({
   template:`
-    <div>{{obj.name}}</div>
+    <div>{{age}}</div>
   `,
   setup(props,context){
     const {reactive,toRef} = Vue;
@@ -74,7 +74,35 @@ const app=Vue.createApp({
     setTimeout(()=>{
       age.value = 18;
     },2000);
-    return {obj}
+    return {age}
+  }
+})
+```
+> setup函数的其中一个参数 context   
+```
+const app=Vue.createApp({
+  template:`
+    <child @change="handleChange" app="app"/>
+  `,
+  methods(){
+    handleChange(){...}
+  }
+  
+});
+app.component("child",{
+  template:`
+    <div>child</div>
+  `,
+  setup(props,context){
+    const {h} = Vue;
+    const {attrs,slots,emit}=context;
+    //attrs
+    //console.log(attrs.app);//attrs包含的是None-props属性 （父组件传递的属性，子组件没有用props接收的属性就是None-props属性）
+    //slots
+    //return ()=>h("div",{},slots.default());
+    //emit
+    function handleClick (){ emit("change")};
+    return {handleClick}
   }
 })
 ```
