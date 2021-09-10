@@ -151,9 +151,17 @@ const validatePlugin=(app,options)=>{}
 const validatePlugin=(app,options)=>{
     app.mixin({
       create(){
-        for(let key in this.$option)
+        for(let key in this.$options.rules){
+          const item = thid.$options.rules[key];
+          this.$watch(key,value=>{
+            const result = item.validate(value);
+            if(!result) console.log(item.message)
+          })
+        }
       }
     })
     
 }
+
+app.use(validatePlugin);
 ```
