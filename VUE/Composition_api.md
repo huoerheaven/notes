@@ -1,1 +1,38 @@
-
+#### Setup函数的使用（Composition api最核心的东西）
+> 实例被完全初始化之前会自动调用setup函数
+#### ref,reactive响应式引用的用法和原理
+> 原理，通过proxy对数据进行封装，当数据变化时，触发模板等内容的更新
+> ref 处理基础类型的数据  
+> reactive处理非基础类型的数据
+```
+const app=Vue.createApp({
+  template:`
+    <div>{{name}}</div>
+  `,
+  setup(props,context){
+    const {ref} = Vue;
+    //ref就相当于将"huoweiwei"变成proxy({value:"huoweiwei"})这样的一个响应式引用
+    let name = ref("huoweiwei");
+    setTimeout(()=>{
+      name = "yangingyuan";
+    },2000);
+    return {name}
+  }
+})
+```
+```
+const app=Vue.createApp({
+  template:`
+    <div>{{obj.name}}</div>
+  `,
+  setup(props,context){
+    const {reactive} = Vue;
+    //reactive就相当于将{name:"huoweiwei"}变成proxy({name:"huoweiwei"})这样的一个响应式引用
+    let obj = reactive({name:"huoweiwei"});
+    setTimeout(()=>{
+      obj.name = "yangjingyuan";
+    },2000);
+    return {obj}
+  }
+})
+```
