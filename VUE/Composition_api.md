@@ -106,3 +106,57 @@ app.component("child",{
   }
 })
 ```
+#### watch 和 watchEffect 的使用和差距
+> watch 
+```
+const app=Vue.createApp({
+  setup(){
+    const {reactive}  = Vue;
+    const nameObj = reactive({name:"WEIWEI",engName:"HUOWEIWEI"});
+    //具备一定的惰性lazy
+    //参数可以拿到原始值和当前值
+    //参数可以是数组
+    watch([()=>nameObj.name,()=>nameObj.engName],([curName,curEng],[prevName,preEng])=>{})
+  },
+  template:`
+    <div>
+      Name:<input v-model = "name">
+      <span>name is {{name}}</span>
+    </div>
+    <div>
+      engName:<input v-model = "engName">
+      <span>engName is {{engName}}</span>
+    </div>
+  `,
+  
+});
+```
+> watchEffect 侦听器 偏向于 effect
+```
+const app=Vue.createApp({
+  setup(){
+    const {reactive}  = Vue;
+    const nameObj = reactive({name:"WEIWEI",engName:"HUOWEIWEI"});
+    //具备一定的惰性lazy
+    //参数可以拿到原始值和当前值
+    //参数可以是数组
+    watch([()=>nameObj.name,()=>nameObj.engName],([curName,curEng],[prevName,preEng])=>{})
+    //立即执行 没有惰性 immediate
+    watchEffect(()=>{
+      console.log("abc");//只有第一次加载的时候被执行 因为代码中没有对外部的依赖
+      console.log(nameObj.name);//第一次加载的时候和 每当改变nameObj.name的时候 都会执行watchEffect，因为代码中有对外部的依赖nameObj.name
+    })
+  },
+  template:`
+    <div>
+      Name:<input v-model = "name">
+      <span>name is {{name}}</span>
+    </div>
+    <div>
+      engName:<input v-model = "engName">
+      <span>engName is {{engName}}</span>
+    </div>
+  `,
+  
+});
+```
