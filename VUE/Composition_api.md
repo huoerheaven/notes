@@ -262,3 +262,20 @@ app.component("child",{
   `
 })
 ```
+> Composition api的语法下，获取真实的DOM元素节点
+```
+const app=Vue.createApp({
+  setup(){
+  const {ref,onMounted} = Vue;
+  const hello = ref(null);
+  onMounted(()=>{
+    console.log(hello.value);//这样就获取到了<div ref="hello">hello world</div>这个dom节点
+  });
+  return {hello}
+  },
+  template:`
+    <div ref="hello">hello world</div>
+  `,
+  
+});
+```
