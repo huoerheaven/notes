@@ -141,11 +141,53 @@ const app=Vue.createApp({
     //参数可以拿到原始值和当前值
     //参数可以是数组
     watch([()=>nameObj.name,()=>nameObj.engName],([curName,curEng],[prevName,preEng])=>{})
+    
     //立即执行 没有惰性 immediate
+    //不需要传递你要侦听的内容，自动会感知代码依赖，不需要传递很多参数，只要传递一个回调函数
+    //不能获取之前数据的值
     watchEffect(()=>{
       console.log("abc");//只有第一次加载的时候被执行 因为代码中没有对外部的依赖
       console.log(nameObj.name);//第一次加载的时候和 每当改变nameObj.name的时候 都会执行watchEffect，因为代码中有对外部的依赖nameObj.name
-    })
+    });
+    //取消侦听
+    const stop = watchEffect(()=>{
+      setTimeout(()=>{
+        stop();
+      },3000)
+    });
+    
+    
+  },
+  template:`
+    <div>
+      Name:<input v-model = "name">
+      <span>name is {{name}}</span>
+    </div>
+    <div>
+      engName:<input v-model = "engName">
+      <span>engName is {{engName}}</span>
+    </div>
+  `,
+  
+});
+```
+> watch 非惰性侦听
+```
+const app=Vue.createApp({
+  setup(){
+    const {reactive}  = Vue;
+    const nameObj = reactive({name:"WEIWEI",engName:"HUOWEIWEI"});
+    //具备一定的惰性lazy
+    //参数可以拿到原始值和当前值
+    //参数可以是数组
+    watch(
+      [()=>nameObj.name,()=>nameObj.engName],
+      ([curName,curEng],[prevName,preEng])=>{},
+      {immediate:true}//添加此代码即可实现非惰性
+    )
+    
+    
+    
   },
   template:`
     <div>
