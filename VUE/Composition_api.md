@@ -185,9 +185,6 @@ const app=Vue.createApp({
       ([curName,curEng],[prevName,preEng])=>{},
       {immediate:true}//添加此代码即可实现非惰性
     )
-    
-    
-    
   },
   template:`
     <div>
@@ -201,4 +198,67 @@ const app=Vue.createApp({
   `,
   
 });
+```
+#### 生命周期函数新写法
+```
+const app=Vue.createApp({
+  setup(){
+    //beforeMount->onBeforeMount
+    //mounted->onMounted
+    //beforeUpdate->onBeforeUpdate
+    //updated->onUpdated
+    //beforeUnmount->onBeforeUnmount
+    //unmouted->onUnmounted
+    const {onBeforeMount,onMounted,onRenderTracked,onRenderTriggered}=Vue;
+    onBeforeMount(()=>{});
+    onMounted(()=>{})
+    //onRenderTracked 每次页面渲染都会触发此钩子函数
+    //onRenderTriggered 页面渲染过一次，再次重新渲染会触发此钩子函数
+  },
+  template:`
+    <div>
+      Name:<input v-model = "name">
+      <span>name is {{name}}</span>
+    </div>
+    <div>
+      engName:<input v-model = "engName">
+      <span>engName is {{engName}}</span>
+    </div>
+  `,
+  
+});
+```
+#### provide,inject,模板Ref的用法
+```
+const app=Vue.createApp({
+  setup(){
+  const {provide} = Vue;
+  const name = ref("huoweiwei");
+  provide("name",readonly(name));
+  provide("fnChangeName",()=>{
+    name.value="mmm";//这里可以修改
+  })
+  },
+  template:`
+    <div></div>
+  `,
+  
+});
+app.component("child",{
+  setup(){
+    const {inject} = Vue;
+    const name  = inject("name","hello");//第二个参数hello为默认值
+    const fnChangeName = inject("fnChangeName");
+    
+    const handleClick=()=>{
+      //修改父组件数据
+      fnChangeName(name);//可以
+      //name.value = "bbb";//不能修改，因为此name值用了readonly,这种方法就防止在子组件改父组件的数据,约束了单向数据流的概念
+    }
+    return {name,handleClick}
+  },
+  template:`
+    <div @click="handleClick">{{name}}</div>
+  `
+})
 ```
