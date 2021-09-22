@@ -126,3 +126,84 @@ function baseConverter(decNumber, base){
    return baseString; 
 }
 ```
+#### 队列
+> 队列是遵循FIFO（First In First Out，先进先出，也称为先来先服务）原则的一组有序的项。
+队列在尾部添加新元素，并从顶部移除元素。最新添加的元素必须排在队列的末尾。
+1. 创建队列类
+```
+function Queue() { 
+ var items = []; 
+ //向队列尾部添加一个（或多个）新的项。
+ this.enqueue = function(element){ 
+   items.push(element); 
+ }; 
+ //移除队列的第一（即排在队列最前面的）项，并返回被移除的元素。
+ this.dequeue = function(){ 
+   return items.shift(); 
+ }; 
+ //返回队列中第一个元素——最先被添加，也将是最先被移除的元素。队列不做任何变动（不移除元素，只返回元素信息——与Stack类的peek方法非常类似）。
+ this.front = function(){ 
+   return items[0]; 
+ };
+ //如果队列中不包含任何元素，返回true，否则返回false。
+ this.isEmpty = function(){ 
+   return items.length == 0; 
+ }; 
+ this.clear = function(){ 
+   items = []; 
+ }; 
+ //返回队列包含的元素个数，与数组的length属性类似。
+ this.size = function(){ 
+   return items.length; 
+ }; 
+}
+```
+2. 优先队列 （元素的添加和移除是基于优先级的）
+> 最小优先队列：优先级的值较小的元素被放置在队列最前面（1代表更高的优先级）。
+```
+function PriorityQueue(element,priority){
+    let items=[];
+    function QueueElement(element,priority){
+        this.element = elememt;
+        this.priority = priority;
+    }
+    this.enqueue = function(element,priority){
+        let queueElement = new QueueElement(element,priority);
+        if(this.isEmpty){
+            items.push(queueElement);
+        }else{
+            let added = false;
+            for(let i=0;i<items.length;i++){
+                if(queueElement.priority<items[i]["priority"]){
+                    items.splice(i,0,queueElement);
+                    added = true;
+                    break;
+                }
+            }
+            if(!added){
+                items.push(queueElement);
+            }
+        }
+    }
+    //移除队列的第一（即排在队列最前面的）项，并返回被移除的元素。
+     this.dequeue = function(){ 
+       return items.shift(); 
+     }; 
+     //返回队列中第一个元素——最先被添加，也将是最先被移除的元素。队列不做任何变动（不移除元素，只返回元素信息——与Stack类的peek方法非常类似）。
+     this.front = function(){ 
+       return items[0]; 
+     };
+     //如果队列中不包含任何元素，返回true，否则返回false。
+     this.isEmpty = function(){ 
+       return items.length == 0; 
+     }; 
+     this.clear = function(){ 
+       items = []; 
+     }; 
+     //返回队列包含的元素个数，与数组的length属性类似。
+     this.size = function(){ 
+       return items.length; 
+     }; 
+}
+```
+> 最大优先队列：把优先级的值较大的元素放置在队列最前面。
