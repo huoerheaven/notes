@@ -53,8 +53,8 @@ for(let i=3;i<=20;i++){
 #### 栈
 > 栈是一种遵从后进先出（LIFO）原则的有序集合。新添加的或待删除的元素都保存在栈的
 末尾，称作栈顶，另一端就叫栈底。在栈里，新元素都靠近栈顶，旧元素都接近栈底。
+1. 创建一个类来表示栈
 ```
-//创建一个类来表示栈
 function Stack() { 
    var items = []; //用数组来保存栈里的元素
    //添加一个（或几个）新元素到栈顶。
@@ -87,5 +87,42 @@ function Stack() {
    }; 
 }
 ```
-
-
+2. 十进制转成二进制
+> 1.首先用2整除一个十进制整数，得到一个商和余数  
+> 2.然后再用2去除得到的商，又会得到一个商和余数  
+> 3.重复操作，一直到商为小于1时为止  
+> 4.然后将得到的所有余数全部排列起来，再将它反过来（逆序排列），切记一定要反过来！  
+```
+function divideBy2(decNumber){ 
+   var remStack = new Stack(), 
+       rem, 
+       binaryString = ''; 
+   while (decNumber > 0){ 
+       rem = Math.floor(decNumber % 2); 
+       remStack.push(rem); 
+       decNumber = Math.floor(decNumber / 2); 
+   } 
+   while (!remStack.isEmpty()){ 
+       binaryString += remStack.pop().toString(); 
+   } 
+   return binaryString; 
+}
+```
+3. 十进制和任何进制的转化
+```
+function baseConverter(decNumber, base){ 
+   var remStack = new Stack(), 
+       rem, 
+       baseString = '', 
+   digits = '0123456789ABCDEF'; 
+   while (decNumber > 0){ 
+       rem = Math.floor(decNumber % base); 
+       remStack.push(rem); 
+       decNumber = Math.floor(decNumber / base); 
+   } 
+   while (!remStack.isEmpty()){ 
+       baseString += digits[remStack.pop()]; 
+   } 
+   return baseString; 
+}
+```
