@@ -35,7 +35,7 @@ for(let i=3;i<=20;i++){
 19. map
 > 对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组,不会改变原数组；
 21. reduce
-> reduce方法接收一个函数作为参数，这个函数有四个参数：previousValue、currentValue、index和array。这个函数会返回一个将被叠加到累加器的值，reduce方法停止执行后会返回这个累加器。
+> reduce方法接收两个参数，一个是callback,一个initValue,initValue是累加器的初始值;callback接收四个参数：total、currentValue、currentIndex和array;total是累加器，值为initValue||0，callback每次循环执行会将累加值赋值给第一个参数total，reduce方法停止执行后会返回这个累加器total。
 23. join
 > 将所有的数组元素连接成一个字符串;
 24. indexOf
