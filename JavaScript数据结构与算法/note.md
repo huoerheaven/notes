@@ -207,3 +207,33 @@ function PriorityQueue(element,priority){
 }
 ```
 > 最大优先队列：把优先级的值较大的元素放置在队列最前面。
+3. 循环队列---击鼓传花游戏的实现(Hot Potato)
+> 什么是击鼓传花游戏：这个游戏中，孩子们围成一个圆圈，把花尽快地传递给旁边的人。某一时刻传花停止，
+这个时候花在谁手里，谁就退出圆圈结束游戏。重复这个过程，直到只剩一个孩子（胜者）。
+```
+function HotPotato(nameList,num){
+  let queue = new Queue(),eliminated="";//eliminated记录每轮游戏出局的那个人
+  for(let i=0;i<nameList.length;i++){
+      queue.enqueue(nameList[i])
+  }
+  while(queue.size>1){
+      for(let i=0;i<num;i++){
+          queue.enqueue(queue.dequeue());
+      }
+      eliminated = queue.dequeue();
+      console.log(eliminated+"出局");
+  }
+  return queue.dequeue();
+}
+let names = ['John','Jack','Camila','Ingrid','Carl']; 
+let winner = hotPotato(names, 7); 
+console.log('胜利者：' + winner);
+
+//
+//以上算法的输出如下：
+//Camila在击鼓传花游戏中被淘汰。
+//Jack在击鼓传花游戏中被淘汰。
+//Carl在击鼓传花游戏中被淘汰。
+//Ingrid在击鼓传花游戏中被淘汰。
+//胜利者：John
+```
