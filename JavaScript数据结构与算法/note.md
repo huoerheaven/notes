@@ -244,3 +244,17 @@ console.log('胜利者：' + winner);
 位置的任何元素，而要想访问链表中间的一个元素，需要从起点（表头）开始迭代列表直到找到
 所需的元素。
 1. 单项链表  
+```
+function LinkedList(){
+  let Node = function(element){
+      this.element = element;
+      this.next = null;
+  }
+  let head=null;
+  let length=0;
+  //向链表尾部添加一个元素
+  this.append=function(element){
+  
+  }
+}
+```
