@@ -254,7 +254,23 @@ function LinkedList(){
   let length=0;
   //向链表尾部添加一个元素
   this.append=function(element){
-  
+      let node = new Node(element),
+      current;
+      if(head===null){//列表为空
+        head = node;
+      }else{
+        current = head;
+        //循环列表，直到找到最后一项
+        while(current.next){
+          current = current.next;
+        }
+        //找到最后一项，将其next赋为node,建立链接
+        current.next = node;
+      }
+      //更新列表的长度
+      length++;
   }
+  //***注***：列表最后一个节点的下一个元素始终是null。
+  
 }
 ```
