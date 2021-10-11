@@ -272,6 +272,29 @@ function LinkedList(){
   }
   //***注***：列表最后一个节点的下一个元素始终是null。
   
+  //从链表中移除元素
+  //从特定位置移除一个元素
+  this.removeAt = function(position){
+    let current=head,index=0,previous;
+    //检查越界值
+    if(position>-1&&position<length){
+      //移除第一项
+      if(position===0){
+        head = current.next;
+      }else{
+        while(index++<position){
+          previous = current;
+          current = current.next;
+        } 
+        //将previous与current的下一项链接起来，跳过current,从而移除它
+        previous.next = current.next;
+      }
+      length--;
+      return current.element;
+    }else{
+      return null;
+    }
+  }
   
 }
 ```
