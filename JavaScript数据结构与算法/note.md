@@ -216,7 +216,7 @@ function HotPotato(nameList,num){
   for(let i=0;i<nameList.length;i++){
       queue.enqueue(nameList[i])
   }
-  while(queue.size>1){
+  while(queue.size()>1){
       for(let i=0;i<num;i++){
           queue.enqueue(queue.dequeue());
       }
