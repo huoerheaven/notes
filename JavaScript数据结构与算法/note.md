@@ -295,6 +295,30 @@ function LinkedList(){
       return null;
     }
   }
-  
+  //在任意一个位置插入一个元素
+    this.insert=function(position,element){
+        //检查越界值
+        if(position>=0&&position<=length){
+           let node = new Node(element),current=head,previous=null,index=0;
+           //在第一个位置添加
+           if(position===0) {
+                node.next=current;
+                head = node;
+           }else{
+                while(index++<position){
+                    previous=current;
+                    current=current.next;
+                }
+                previous.next=node;
+                node.next=current;
+           }
+           //更新列表长度
+           length++;
+           return true;
+        }else{
+            return false;
+        }
+    }
+    //***注***：使用变量引用我们需要控制的节点非常重要，这样就不会丢失节点之间的链接。我们可以只使用一个变量（previous），但那样会很难控制节点之间的链接。由于这个原因，最好是声明一个额外的变量来帮助我们处理这些引用。
 }
 ```
