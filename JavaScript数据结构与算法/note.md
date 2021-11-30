@@ -296,29 +296,68 @@ function LinkedList(){
     }
   }
   //在任意一个位置插入一个元素
-    this.insert=function(position,element){
-        //检查越界值
-        if(position>=0&&position<=length){
-           let node = new Node(element),current=head,previous=null,index=0;
-           //在第一个位置添加
-           if(position===0) {
-                node.next=current;
-                head = node;
-           }else{
-                while(index++<position){
-                    previous=current;
-                    current=current.next;
-                }
-                previous.next=node;
-                node.next=current;
-           }
-           //更新列表长度
-           length++;
-           return true;
-        }else{
-            return false;
-        }
-    }
-    //***注***：使用变量引用我们需要控制的节点非常重要，这样就不会丢失节点之间的链接。我们可以只使用一个变量（previous），但那样会很难控制节点之间的链接。由于这个原因，最好是声明一个额外的变量来帮助我们处理这些引用。
+  this.insert=function(position,element){
+      //检查越界值
+      if(position>=0&&position<=length){
+         let node = new Node(element),current=head,previous=null,index=0;
+         //在第一个位置添加
+         if(position===0) {
+              node.next=current;
+              head = node;
+         }else{
+              while(index++<position){
+                  previous=current;
+                  current=current.next;
+              }
+              previous.next=node;
+              node.next=current;
+         }
+         //更新列表长度
+         length++;
+         return true;
+      }else{
+          return false;
+      }
+  }
+  //***注***：使用变量引用我们需要控制的节点非常重要，这样就不会丢失节点之间的链接。我们可以只使用一个变量（previous），但那样会很难控制节点之间的链接。由于这个原因，最好是声明一个额外的变量来帮助我们处理这些引用。
+
+  //把LinkedList对象转换成一个字符串
+  this.toString=function(){
+      let current=head,str="";
+      while(current){
+          str+=current.element;
+          current=current.next;
+      }
+      return str;
+  }
+  //indexOf方法接收一个元素的值，如果在列表中找到它，就返回元素的位置，否则返回-1。
+  this.indexOf=function(element){
+      let current=head,index=0;
+      while(current){
+          if(current.element===element){
+              return index;
+          }
+          index++;
+          current=current.next;
+      }
+      return -1;
+  }
+  //通过indexOf和removeAt方法来实现
+  this.remove=function(element){
+      let index = this.indexOf(element);
+      return this.removeAt(index);
+  }
+  /**
+   * 我们已经有一个移除给定位置的一个元素的removeAt方法了。现在有了indexOf方法，如果传入元素的值，就能找到它的位置，然后调用removeAt方法并传入找到的位置。这样非常简单，如果需要更改removeAt方法的代码，这样也更容易——两个方法都会被更改（这就是重用代码的妙处）。这样，我们就不需要维护两个从列表中移除一项的方法，只需要一个！同时，removeAt方法将会检查边界约束。
+   */
+  this.isEmpty=function(){
+      return length===0;
+  }
+  this.size=function(){
+      return length;
+  }
+  this.getHead=function(){
+      return head;
+  }
 }
 ```
