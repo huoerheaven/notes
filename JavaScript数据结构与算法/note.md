@@ -449,12 +449,12 @@ function DoublyLinkedList(){
 #### 集合
 > 集合是由一组无序且唯一（即不能重复）的项组成的。
 > 我们要实现的集合类就是以ECMAScript 6中Set类的实现为基础的。
->>  add(value)：向集合添加一个新的项。
->>  remove(value)：从集合移除一个值。
->>  has(value)：如果值在集合中，返回true，否则返回false。 
->>  clear()：移除集合中的所有项。
->>  size()：返回集合所包含元素的数量。与数组的length属性类似。
->>  values()：返回一个包含集合中所有值的数组。
+>> add(value)：向集合添加一个新的项。  
+>> remove(value)：从集合移除一个值。  
+>> has(value)：如果值在集合中，返回true，否则返回false。   
+>> clear()：移除集合中的所有项。  
+>> size()：返回集合所包含元素的数量。与数组的length属性类似。  
+>> values()：返回一个包含集合中所有值的数组。  
 ```
 function Set(){
     //我们使用对象而不是数组来表示集合（items）
