@@ -362,3 +362,87 @@ function LinkedList(){
 }
 ```
 2. 双向链表  
+> 双向链表和普通链表的区别在于，在链表中，一个节点只有链向下一个节点的链接，而在双向链表中，链接是双向的：一个链向下一个元素，另一个链向前一个元素。
+> 双向链表提供了两种迭代列表的方法：从头到尾，或者反过来。我们也可以访问一个特定节点的下一个或前一个元素。在单向链表中，如果迭代列表时错过了要找的元素，就需要回到列表起点，重新开始迭代。这是双向链表的一个优点。
+```
+//双向链表
+function DoublyLinkedList(){
+    let Node=function(element){
+        this.element = element;
+        this.prev=null;
+        this.next=null;//新增的
+    }
+    let length=0,head=null,tail=null;//tail新增的
+    /**
+     * 在代码中可以看到，LinkedList类和DoublyLinkedList类之间的区别标为新增的。在Node类里有prev属性（一个新指针），在DoublyLinkedList类里也有用来保存列表最后一项的引用的tail属性。
+     */
+    this.insert=function(position,element){
+        let node = new Node(element),current=head,previous=null,index=0;
+        if(position>=0&&position<=length){
+            if(position===0){
+                if(!head){//新增
+                   head=node;
+                   tail=node; 
+                }else{
+                    node.next=current;
+                    current.prev=node;
+                    head=node;
+                }
+            }else if(position===length){//最后一项 新增
+                current=tail;
+                current.next=node;
+                node.prev=current;
+                tail=node;
+            }else{
+                while(index++<position){
+                    previous=current;
+                    current=current.next;
+                }
+                previous.next = node;
+                node.prev=previous;//
+                node.next = current;
+                current.prev = node;
+            }
+        }else{
+            return false;
+        }
+    }
+    /**
+     * 我们可以对insert和remove这两个方法的实现做一些改进。在结果为否的情况下，我们可以把元素插入到列表的尾部。性能也可以有所改进，比如，如果position大于length/2，就最好从尾部开始迭代，而不是从头开始（这样就能迭代更少列表中的元素）。
+     */
+    this.removeAt=function(position){
+        if(position>-1&&position<length){
+            let current=head,previous=null,index=0;
+            if(position===0){
+                head=current.next;
+                //如果只有一项 更新tail 新增
+                if(length===1){
+                    tail=null;
+                }else{
+                    head.prev=null;
+                }
+            }else if(position===length-1){//最后一项 新增
+                current=tail;
+                tail=current.prev;
+                tail.next=null;
+            }else{
+                while(index++<position){
+                    previous=current;
+                    current=current.next;
+                }
+                previous.next=current.next;
+                current.next.prev = previous;
+            }
+            length--;
+            return current.element;
+        }else{
+            return null;
+        }
+    }
+}
+```
+3. 循环链表
+> 循环链表可以像链表一样只有单向引用，也可以像双向链表一样有双向引用。循环链表和链表之间唯一的区别在于，最后一个元素指向下一个元素的指针（tail.next）不是引用null,而是指向第一个元素（head）。双向循环链表有指向head元素的tail.next，和指向tail元素的head.prev。
+4. 小结
+> 链表相比数组最重要的优点，那就是无需移动链表中的元素，就能轻松地添加和移除元素.因此，当你需要添加和移除很多元素时，最好的选择就是链表，而非数组。
+
