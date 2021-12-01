@@ -446,3 +446,172 @@ function DoublyLinkedList(){
 4. 小结
 > 链表相比数组最重要的优点，那就是无需移动链表中的元素，就能轻松地添加和移除元素.因此，当你需要添加和移除很多元素时，最好的选择就是链表，而非数组。
 
+#### 集合
+> 集合是由一组无序且唯一（即不能重复）的项组成的。
+> 我们要实现的集合类就是以ECMAScript 6中Set类的实现为基础的。
+>>  add(value)：向集合添加一个新的项。
+>>  remove(value)：从集合移除一个值。
+>>  has(value)：如果值在集合中，返回true，否则返回false。 
+>>  clear()：移除集合中的所有项。
+>>  size()：返回集合所包含元素的数量。与数组的length属性类似。
+>>  values()：返回一个包含集合中所有值的数组。
+```
+function Set(){
+    //我们使用对象而不是数组来表示集合（items）
+    let items={};
+    //如果值在集合中，返回true，否则返回false。
+    //方法一
+    // this.has=function(value){
+    //     //也可以用 in操作符来验证给定的值是否是items对象的属性(包括继承属性，如toString)
+    //     return value in items;
+    // }
+    //方法二（好！）
+    this.has=function(value){
+        //对象的hasOwnProperty方法返回一个表明对象是否具有特定属性的布尔值
+        return items.hasOwnProperty(value);
+        
+    }
+    this.add=function(value){
+        if(!this.has(value)){
+            items[value]=value;
+            return true;
+        }
+        return false;
+    }
+    /**注：添加一个值的时候，把它同时作为键和值保存，因为这样有利于查找这个值。 */
+    //从集合移除一个值。
+    this.remove=function(value){
+        if(this.has(value)){
+            delete items[value];
+            return true;
+        }
+        return false;
+    }
+    //移除集合中的所有项。
+    this.clear=function(){
+        items={};
+    }
+    this.size=function(){
+        //方法一
+        //使用一个length变量，每当使用add或remove方法时控制它，就像在LinkedList类一样。
+        //方法二（只能在现代浏览器中运行，（比如IE9以上版本、Firefox 4以上版本、Chrome 5以上版本、Opera 12以上版本、Safari 5以上版本，等等）
+        // return Object.keys(items).length;
+        //方法三
+        let count=0;
+        for(let prop in items){
+            if(items.hasOwnProperty(prop)) ++count;
+        }
+        return count;
+        /**
+         * 不能简单地使用for-in语句遍历items对象的属性，递增count变量的值。还需要使用has方法（以验证items对象具有该属性），因为对象的原型包含了额外的属性（属性既有继承自JavaScript的Object类的，也有属于对象自身，未用于数据结构的）。
+         * Object的hasOwnProperty方法，如果是对象自身属性，返回true;如果是继承属性，返回false
+         */
+    }
+    //返回一个包含集合中所有值的数组。
+    this.values=function(){
+        //方法一
+        // return Object.keys(items);
+        //方法二
+        let values=[];
+        for(let prop in items){
+            if(items.hasOwnProperty(prop)) {
+                values.push(prop);
+            }
+        }
+        return values;
+    }
+    //集合操作
+    /**
+     *  并集：对于给定的两个集合，返回一个包含两个集合中所有元素的新集合。
+        交集：对于给定的两个集合，返回一个包含两个集合中共有元素的新集合。
+        差集：对于给定的两个集合，返回一个包含所有存在于第一个集合且不存在于第二个集合的元素的新集合。
+        子集：验证一个给定集合是否是另一集合的子集。
+     */
+    //并集
+    this.union=function(otherSet){
+        let unionSet = new Set();
+        let values = this.values();
+        for(let i=0;i<values.length;i++){
+            unionSet.add(values[i])
+        }
+        values=otherSet.values();
+        for(let j=0;j<values.length;j++){
+            unionSet.add(values[j])
+        }
+        return unionSet;
+    }
+    //交集
+    this.interaction=function(otherSet){
+        let interaction=new Set();
+        let values=this.values();
+        for(let i=0;i<values.length;i++){
+            if(otherSet.has(values[i])){
+                interaction.add(values[i])
+            }
+        }
+        return interaction;
+    }
+    //差集
+    this.difference=function(otherSet){
+        let difference = new Set();
+        let values=this.values();
+        for(let i=0;i<values.length;i++){
+            if(!otherSet.has(values[i])){
+                difference.add(values[i])
+            }
+        }
+        return difference;
+    }
+    //子集
+    this.subset=function(otherSet){
+        let subset = new Set();
+        if(this.size>otherSet.size) return false;
+        else{
+            let values=this.values();
+            for(let i=0;i<values.length;i++){
+                if(!otherSet.has(values[i])){
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+    }
+
+}
+//测试
+let set = new Set();
+set.add(1);
+console.log(set.values());//输出["1"]
+console.log(set.has(1));//输出true
+console.log(set.has("toString"));//输出false
+console.log(set.size()); //输出1
+
+set.add(2); 
+console.log(set.values()); //输出["1", "2"] 
+console.log(set.has(2)); //true 
+console.log(set.size()); //2
+
+set.remove(1); 
+console.log(set.values()); //输出["2"]
+
+set.remove(2); 
+console.log(set.values()); //输出[]
+
+let setA = new Set();
+setA.add("a");
+setA.add("b");
+setA.add("c");
+let setB = new Set();
+setB.add("c");
+setB.add("e");
+setB.add("f");
+let unionAB=setA.union(setB);
+console.log(unionAB.values());//['a', 'b', 'c', 'e', 'f']
+let interactionAB=setA.interaction(setB);
+console.log(interactionAB.values());//['c']
+let differenceAB=setA.difference(setB);
+console.log(differenceAB.values());//['a', 'b']
+let subset=setA.subset(setB);
+console.log(subset);//false
+```
