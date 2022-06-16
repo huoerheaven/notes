@@ -1,0 +1,25 @@
+#### 简书项目有关知识点
+- react 兼容ie8及以上浏览器
+- create-react-app jianshu
+- yarn add styled-components
+- reset.css (不同浏览器内核对body等标签的默认样式设置是不同的。reset.css可以将所有浏览器标签样式的表现形式相同)
+- yarn add react-transition-group
+- yarn add redux
+- yarn add react-redux  
+- - Provider Connect 
+- github redux-devtool-extension
+- import { combineReducers } from "redux"
+- yarn add immutable   管理store中的数据
+- - import { formJS } from "immutable"
+- - toJS 将immutable转换为普通对象
+- - immutable对象的set方法，会结合之前immutable对象的值和设置的值，返回一个全新的对象，并没有改变原始state的值
+- - immutable对象的值也是immutable对象
+- redux-immutable 使最外层的state也变成immutable对象 
+- - import { combineReducers } from "redux-immutable"
+- yarn add redux-thunk  redux-thunk会使dispatch接收一个函数。 在actionCreator中处理异步请求
+- 模拟假数据---public文件夹下可以创建api文件 存放假数据 项目上线之前记得把api文件夹删掉
+- 路由 yarn add react-router-dom
+- import { BrowserRouter,Routes,Route,Link } from "react-router-dom";
+- PureComponent + immutable.js 
+- 异步组件
+- - react-loadable + withRouter
