@@ -51,12 +51,11 @@ const [isPending,startPosition] = useTransition();
 ```
 - - startTransition 接收一个回调函数 将非紧急更新任务放入回调中
 - - **紧急更新**： 反映在用户交互上，需要实时性，比如点击、输入、拖拽等
-- - ** =非紧急更新**： 也就是transition,是界面从一个状态过渡到另一个状态
+- - **非紧急更新**： 也就是transition,是界面从一个状态过渡到另一个状态
 - Transition API 应用场景
 - - Slow Rendering: 当数据量很大的界面渲染，自然要花费更长的时间
 - - Slow Network: 异步请求，由于需要从外界请求数据，自然有一定的延迟
 ```js  
-//fetchData.tsx
 import React, { useState , useTransition} from 'react';
 
 const App:React.FC=()=>{
@@ -86,36 +85,7 @@ const App:React.FC=()=>{
 }
 
 ```
-```js
-//DogShow.tsx DogShow组件
-import React from "react";
-import fetchData from "../request/fetchData";
 
-const data = fetchData("https://dog.ceo/api/breeds/image/random");
-
-const DogShow: React.FC = ()=>{
-    const dogData = data.read();
-    return (
-        <img src={dogData.message} style={{width:"60px",height:"60px"}}/>
-    )
-}
-
-export default DogShow;
-```
-```js
-//App.tsx
-import React, { Suspense} from 'react';
-import DogShow from "./components/DogShow";
-const App:React.FC=()=>{
-    return (
-        <>
-            <Suspense fallback={<h1>loading dog image...</h1>}>
-            <DogShow />
-            </Suspense>
-        </>
-    )
-}
-```
 - **suspense**
 - - react v16就已经推出了，动态加载组件
 - - [详见](https://segmentfault.com/a/1190000022185283)
@@ -128,6 +98,7 @@ const App:React.FC=()=>{
 - - 当Promise pending,throw对应的Promise对象
 - - 暴露一个对应的read方法，来读取Promise的状态
 ```js
+//fetchData.tsx
 import axios from "axios";
 
 function wrapPromise(promise:Promise<any>){
@@ -157,6 +128,36 @@ function wrapPromise(promise:Promise<any>){
 export default function fetchData(url:string){
     const promise = axios.get(url).then(res=>res.data);
     return wrapPromise(promise);
+}
+```
+```js
+//DogShow.tsx DogShow组件
+import React from "react";
+import fetchData from "../request/fetchData";
+
+const data = fetchData("https://dog.ceo/api/breeds/image/random");
+
+const DogShow: React.FC = ()=>{
+    const dogData = data.read();
+    return (
+        <img src={dogData.message} style={{width:"60px",height:"60px"}}/>
+    )
+}
+
+export default DogShow;
+```
+```js
+//App.tsx
+import React, { Suspense} from 'react';
+import DogShow from "./components/DogShow";
+const App:React.FC=()=>{
+    return (
+        <>
+            <Suspense fallback={<h1>loading dog image...</h1>}>
+            <DogShow />
+            </Suspense>
+        </>
+    )
 }
 ```
 
