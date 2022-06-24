@@ -164,3 +164,161 @@ const UseMemo = ()=>{
 
 export default UseMemo;
 ```
+
+##### 13. 使用 useCallback 做性能优化
+```js
+import React, { useState, memo, useMemo, useCallback } from "react";
+
+
+//通过memo对函数组件进行封装
+//类似 class PureComponent,对 props 进行浅层比较
+const Child = memo(({userInfo,onChange})=>{
+    console.log("Child render...");
+    return (
+        <>
+        <p>This is Child {userInfo.name} {userInfo.age} </p>
+        <input onChange={onChange}/>
+        </>
+    )
+})
+
+const UseMemo = ()=>{
+    console.log("parent render...");
+
+    const [count,setCount] = useState(0);
+    const [name,setName] = useState("huoweiwei");
+
+    //用useMemo 缓存数据，有依赖
+    //第二个参数（类似于useEffect） 依赖的数据发生变化，缓存就会失效
+    const userInfo  = useMemo(()=>{
+        return {name,age:18}
+    },[name]);
+
+    //用 useCallback 缓存函数
+    const onChange = useCallback((e)=>{
+        console.log(e.target.value);
+    },[])
+
+    return(
+        <>
+            count is {count}
+            <button onClick={()=>{setCount(count+1)}}>click Count </button>
+            <button onClick={()=>{setName(name+"1")}}>click Name </button>
+            <Child userInfo={userInfo} onChange={onChange}></Child>
+        </>
+    )
+}
+
+export default UseMemo;
+```
+
+##### 14. useMemo useCallback 使用总结
+- useMemo 缓存数据
+- useCallback 缓存函数
+- 两者都是 React Hooks 的常见优化策略
+
+##### 15. 自定义Hook
+- 封装通用的功能
+- 开发和使用第三方 Hooks
+- 自定义 Hook 带来了无限的扩展性，解耦代码
+```js  
+import React, { useState , useTransition} from 'react';
+
+const App:React.FC=()=>{
+    //useTransition
+    const [isPending,startTransition] = useTransition();
+    const [input,setInput] = useState("");
+    const [searchData,setSearchData] = useState<number[]>([]);
+
+    const updateInput = (e:React.ChangeEvent<HTMLInputElement>)=>{
+        setInput(e.target.value);
+        startTransition(()=>{
+        const arr = Array.from({length:10000},(_,i)=>i+new Date().getTime());
+        setSearchData(arr);
+        })
+    }
+
+    return (
+        <>
+        <input type="text" value={input} name="" id="" onChange={updateInput} />
+        {isPending?<p>⏳</p>:""}
+        {
+          searchData.map(s=>
+            <option key={s}>{s}</option>
+        )}
+        </>
+    )
+}
+
+```
+
+##### 16. Hooks 使用规范
+- 命名规范 useXxx
+- Hooks 使用规范，重要！！！
+- 关于 Hooks 的调用顺序
+```js
+import React, { useState } from 'react';
+const Teach=()=>{
+    // 函数组件，纯函数，执行完即销毁
+    // 所以，无论组件初始化（render）还是组件更新（re-render）都会重新执行一次这个函数，获取最新的组件
+    // 这一点和 class 组件不一样 
+
+    //render:初始化 state 的值 
+    //re-render: 读取 state 的值
+    const [studentName, setStudentName ] = useState("huoweiwei");
+
+    // render: 添加 effect 函数
+    // re-render: 替换 effect 函数
+    useEffect(()=>{
+
+    })
+}
+export default Teach;
+```
+- 只能用于 React 函数组件和自定义 Hook 中,其他地方不可以
+- 只能用于顶层代码，不能在循环、判断中使用 Hooks
+- eslint 插件 eslint-plugin-react-hooks 可以帮到你
+
+##### 17. Hooks 做组件逻辑复用的好处
+- 完全符合 Hooks 原有规则，没有其他要求，易理解记忆
+- 变量作用域明确
+- 不会产生组件嵌套
+
+##### 18. Hooks 使用中的几个注意事项！！！
+- useState trap
+```js 
+import React,{ useState } from "react";
+
+const Child = ({userInfo})=>{
+    //Trap！！！
+    //render: 初始化 state
+    //re-render: 只恢复初始化的 state 值，不会再重新设置新的值
+    //re-render: 只能用 setName 修改
+    const [name,setName] = useState(userInfo.name);
+
+    return (
+        <>
+            // props传过来的name值会改变
+            <p>Child, props name: {userInfo.name}</p>
+            //state中的name值不会改变，name值只能通过setName改变
+            <p>Child, state name: {name}</p>
+        </>
+    )
+}
+
+const UseStateTrap = ()=>{
+    const [name,setName] = useState("weiwei");
+    const userInfo = {name};
+
+    return (
+        <>
+        
+            <button onClick={()=>{setName("huohuo")}}>setName</button>
+            <Child userInfo={userInfo}></Child>
+        </>
+    )
+}
+
+export default UseStateTrap;
+
+```
