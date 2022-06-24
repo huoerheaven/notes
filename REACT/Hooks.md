@@ -21,6 +21,42 @@
 - HOC - (Higher order component)
 - 高阶组件 就是一个函数，接受一个组件作为参数，返回一个新的组件
 - [random pictures](https://dog.ceo/api/breeds/image/random)
+```js
+//自定义 Hook 之 **useAxios**
+import { useState,useEffect } from "react";
+import axios from "axios";
+
+const useAxios = (url)=>{
+    const [data,setData] = useState(null);
+    const [loading,setLoading] = useState(false);
+
+    useEffect(()=>{
+        setLoading(true);
+        axios.get(url).then(result=>{
+            setData(result.data);
+            setLoading(false);
+        })
+    });
+    return [data,loading]
+}
+
+export default useAxios;
+
+//App.js 使用useAxios
+import useAxios from "./useAxios";
+
+const App=()=>{
+    const [data,loading] = useAxios("https://dog.ceo/api/breeds/image/random");//useAxios使用方法同useState
+    return (
+        <>
+            {loading?<p>🐕读取中。。。</p>:<img src={data.message} style={{width:"50px",height:"50px"}}/>}
+        </>
+    )
+}
+
+export default App;
+
+```
 
 ##### 5. useRef
 - 组件的每次渲染 props和state都是保持独立的
