@@ -61,3 +61,106 @@ const App=()=>{
 - 所谓副作用，就是对函数之外造成影响，如 设置全局定时任务
 - 而组件需要副作用，所以需要 useEffect “钩”入纯函数中
 
+##### 9. useEffect 中返回函数fn
+- useEffect 依赖[],组件销毁执行fn,等同于class组件的componentWillUnMount；
+- useEffect 无依赖或依赖[a,b],组件更新时执行fn, 不同于class组件的componentWillUnMount；
+- 即，下一次执行useEffect 之前，就会执行fn,无论更新或卸载。
+
+```js
+//！！！注意！！！
+//当useEffect的第二个参数什么也不传时，相当于模拟class组件的componentDidMount和componentDidUpdate
+useEffect(()=>{
+    console.log(`开始监听变化`);
+    //[特别注意]
+    //此时并不完全等同于class组件的componentWillUnMount
+    //props 发生变化，即更新，也会执行结束监听
+    //准确的说：返回的函数，会在下一次 effect 执行之前，被执行 
+    return ()=>{
+        console.log(`结束监听变化`);
+    }
+})
+```
+
+##### 10. useReducer
+```js
+import React,{ useReducer } from "react";
+
+const initialState = {count:0};
+const reducer=(state,action)=>{
+    switch(action.type){
+        case "increment":
+            return {count:state.count+1};
+        case "decrement":
+            return {count:state.count-1};
+        default:
+            return state;
+    }
+}
+
+const UseReducer = ()=>{
+    const [state,dispatch] = useReducer(reducer,initialState);
+
+    return (
+        <>
+            <p>{state.count}</p>
+            <button onClick={()=>{dispatch({type:"increment"})}}>increment</button>
+            <button onClick={()=>{dispatch({type:"decrement"})}}>decrement</button>
+        </>
+        
+    )
+}
+
+export default UseReducer;
+```
+
+##### 11. useReducer 和 redux的区别
+- useReducer 是 useState 的代替方案，用于 state 复杂变化
+- useReducer 是单个组件状态管理，组件通讯还需要props
+- redux 是全局的状态管理，多组件共享数据
+
+##### 12. useMemo 使用总结
+- React 父组件变化之后，默认会更新其所有子组件
+- class 组件使用SCU 和 PureComponent 做优化
+- Hooks 中使用useMemo ,但优化的原理是相同的
+
+```js
+import React, { useState, memo, useMemo } from "react";
+
+
+//通过memo对函数组件进行封装
+//类似 class PureComponent,对 props 进行浅层比较
+const Child = memo(({userInfo})=>{
+    console.log("Child render...");
+    return (
+        <>
+        <p>This is Child {userInfo.name} {userInfo.age} </p>
+        </>
+    )
+})
+
+const UseMemo = ()=>{
+    console.log("parent render...");
+
+    const [count,setCount] = useState(0);
+    const [name,setName] = useState("huoweiwei");
+
+    //用useMemo 缓存数据，有依赖
+    //第二个参数（类似于useEffect） 依赖的数据发生变化，缓存就会失效
+    const userInfo  = useMemo(()=>{
+        return {name,age:18}
+    },[name]);
+
+    return(
+        <>
+            count is {count}
+            <button onClick={()=>{setCount(count+1)}}>click Count </button>
+            <button onClick={()=>{setName(name+"1")}}>click Name </button>
+            <Child userInfo={userInfo}></Child>
+        </>
+    )
+
+
+}
+
+export default UseMemo;
+```
