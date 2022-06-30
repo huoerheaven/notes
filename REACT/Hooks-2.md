@@ -364,9 +364,6 @@ function UseEffectChangeState(){
         //清除定时任务
         return ()=>clearTimeout(timer);
     },[]);
-
-    //依赖为 [] 时，re-render 不会重新执行 effect 函数
-    //没有依赖时，re-render 会重新执行 effect 函数
 }
 ```
 
