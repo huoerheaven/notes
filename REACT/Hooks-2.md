@@ -322,3 +322,54 @@ const UseStateTrap = ()=>{
 export default UseStateTrap;
 
 ```
+- useEffect 内部不能修改state
+```js
+function UseEffectChangeState(){
+    const [count,setCount] = useState(0);
+
+    //模拟DidMount 
+    useEffect(()=>{
+        console.log(count);//0
+
+        //定时任务
+        const timer = setInterval(()=>{
+            console.log(count);//一直是0 是因为依赖为[],re-render 不会重新执行 effect 函数
+            setCount(count+1);
+        })
+
+        //清除定时任务
+        return ()=>clearTimeout(timer);
+    },[]);
+
+    //依赖为 [] 时，re-render 不会重新执行 effect 函数
+    //没有依赖时，re-render 会重新执行 effect 函数
+}
+```
+- - 解决方案：可以定义一个变量myCount---不推荐
+- - 推荐！！！ 用useRef. const countRef = useRef(0);使用countRef.current的值
+```js
+function UseEffectChangeState(){
+    // const [count,setCount] = useState(0);
+    const countRef = useRef(0);
+
+    //模拟DidMount 
+    useEffect(()=>{
+
+        //定时任务
+        const timer = setInterval(()=>{
+            console.log(countRef.current);//会+1
+            setCount(countRef.current+1);
+        })
+
+        //清除定时任务
+        return ()=>clearTimeout(timer);
+    },[]);
+
+    //依赖为 [] 时，re-render 不会重新执行 effect 函数
+    //没有依赖时，re-render 会重新执行 effect 函数
+}
+```
+
+- useEffect 可能出现死循环
+- - useEffect 第二个参数里如果有{} [] 等引用类型，就会出现死循环 因为Object.is({},{})=false
+- - 解决方案：将引用类型打散 如解构赋值 const {a,b} = config;然后将a b 放入useEffect 第二个参数
