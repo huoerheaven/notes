@@ -11,7 +11,13 @@
 6. 双向数据绑定v-model的实现原理
 
 
-### vue高级特性
+#### 如何理解MVVM
+- 数据驱动视图
+- - 传统组件，只是静态渲染，更新还要依赖于操作DOM
+- - 数据驱动试图-vue MVVM
+- - 数据驱动视图 - React setState
+
+#### vue高级特性
 1. 自定义v-model
 2. $nextTick
 3. slot 
