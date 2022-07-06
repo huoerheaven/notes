@@ -45,8 +45,18 @@
 - - 2. 重新执行 render 函数，生曾 newVnode
 - - 3. patch(vnode,newVode)
 - 异步渲染
+- - 1. $nextTick 
+- - - 异步渲染，$nextTick 待 DOM 渲染完再回调
+- - - 页面渲染时会将 data 的修改做整合，多次 data 修改只会渲染一次
+- - 2. 汇总 data 的修改，一次性更新视图
+- - 3. 减少 DOM 操作次数，提高性能
 
 ##### 8. 回顾
 - 响应式：监听 data 属性 getter setter (包括数组)
 - 模板编译：模板到 render 函数，再到vnode
 - vdom: patch(elem,vnode) 和 patch(vnode,newVnode)
+
+##### 9. 总结1
+- 渲染和响应式的关系
+- 渲染和模板编译的关系
+- 渲染和 vdom 的关系
