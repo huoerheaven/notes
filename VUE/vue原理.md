@@ -27,7 +27,26 @@
 - html 是标签语言，只有JS 才能实现判断、循环（图灵完备的）
 - 因此，模板一定是转换为某种 JS 代码，即编译模板
 
-##### 66. 编译模板 2
+##### 6. 编译模板 2
 - 模板编译为 render 函数，执行 render 函数返回 vnode
 - 基于 vnode 再执行 patch 和 diff
 - 使用webpack vue-loader，会在开发环境下编译模板（重要）
+- 模板到 render 函数，再到 vnode, 再到渲染和更新
+- vue 组件中使用 render 代替 template
+
+##### 7. 组件 渲染/更新 过程
+==== 一个组件渲染到页面，修改 data 触发更新（数据驱动视图）
+- 初次渲染过程
+- - 1. 解析模板为 render 函数（或在开发环境已完成，vue-loader）
+- - 2. 触发响应式，监听 data 属性 getter setter (执行render过程中 触发data的getter)
+- - 3. 执行 render 函数，生成 vnode,patch(elem,vnode)
+- 更新过程
+- - 1. 修改 data,触发 setter (此前在getter中已被监听  未在getter中监听的数据修改，不会触发setter)
+- - 2. 重新执行 render 函数，生曾 newVnode
+- - 3. patch(vnode,newVode)
+- 异步渲染
+
+##### 8. 回顾
+- 响应式：监听 data 属性 getter setter (包括数组)
+- 模板编译：模板到 render 函数，再到vnode
+- vdom: patch(elem,vnode) 和 patch(vnode,newVnode)
