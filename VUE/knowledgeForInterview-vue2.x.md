@@ -142,7 +142,7 @@ Vue.component('base-input', {
 - 在O(n^3)基础上做了一些调整
 - 具体调整：
 - -  a. 只比较同一层级，type不相同直接销毁重建；
-- -  b. 通过type(or sel)和key判断是不是同一个组件，是同一个组件就不再重复对比；
+- -  b. 通过tag(or sel)和key判断是不是同一个组件，是同一个组件就不再重复对比；
 
 ##### 19. 简述diff算法过程
 - patch(elem,vnode)和patch(vnode,vnode)
