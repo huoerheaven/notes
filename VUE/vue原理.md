@@ -16,3 +16,8 @@
 - - oldStart vs newEnd
 - - oldEnd vs newStart
 - - else newVnode 逐个和 oldVnode去比较，有相同的就进行替换，没相同的就直接插入 （**体现 key 的重要性**）
+
+##### 4. vodm 和 diff
+- 细节不重要，updateChildren 的过程也不重要，不要深究
+- vdom 核心概念很重要：h vnode patch diff key 等
+- vdom 存在的价值更加重要：数据驱动视图，控制 DOM 操作
