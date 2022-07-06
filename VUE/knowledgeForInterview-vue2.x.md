@@ -67,16 +67,19 @@
 Vue.component('base-input', {
     model: {
         prop: 'text',
-        event: 'input'
+        event: 'change'
     },
     props: {
         text: Boolean
     },
+    // ！！！注意！！！
+    // 1. input中使用 :value 而不是 v-model
+    // 2. input中的change 和 model.event 对应起来即可，名字自己该
     template: `
         <input
           type="text"
           :value="text"
-          @input="text = $event.target.value"
+          @input="$emit('change', $event.target.value)"
         >
     `
 })
@@ -192,6 +195,9 @@ Vue.component('base-input', {
 - - 传统组件，只是静态渲染，更新还要依赖于操作DOM
 - - 数据驱动试图-vue MVVM
 - - 数据驱动视图 - React setState
+- view (视图)
+- model （模型 数据）
+- view model （vue双向绑定 vue机制）
 
 #### vue高级特性
 1. 自定义v-model
