@@ -151,6 +151,7 @@ Vue.component('base-input', {
 ```js
  //特殊处理：使之能监听原生数组
   const oldArrayProto = Array.prototype;
+  //Object.create() 创建新对象，原型指向oldArrayProto，再扩展新的方法不会影响原型
   const arrPrototype = Object.create(oldArrayProto);
   ["push","pop"].forEach(name=>{
       //arrPrototype的__proto__指向oldArrayProto，这种处理会使arrPrototype某些方法（push or pop or ...）除了继承原生array的方法外，又添加了单独的逻辑
