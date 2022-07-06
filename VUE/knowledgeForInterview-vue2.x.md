@@ -19,6 +19,21 @@
 - vuex  
 
 ##### 5. 描述组件渲染和更新过程
+==== 一个组件渲染到页面，修改 data 触发更新（数据驱动视图）
+- 初次渲染过程
+- - 1. 解析模板为 render 函数（或在开发环境已完成，vue-loader）
+- - 2. 触发响应式，监听 data 属性 getter setter (执行render过程中 触发data的getter)
+- - 3. 执行 render 函数，生成 vnode,patch(elem,vnode)
+- 更新过程
+- - 1. 修改 data,触发 setter (此前在getter中已被监听  未在getter中监听的数据修改，不会触发setter)
+- - 2. 重新执行 render 函数，生曾 newVnode
+- - 3. patch(vnode,newVode)
+- 异步渲染
+- - 1. $nextTick 
+- - - 异步渲染，$nextTick 待 DOM 渲染完再回调
+- - - 页面渲染时会将 data 的修改做整合，多次 data 修改只会渲染一次
+- - 2. 汇总 data 的修改，一次性更新视图
+- - 3. 减少 DOM 操作次数，提高性能
 
 ##### 6. 双向数据绑定v-model的实现原理 [查看vue官网](https://cn.vuejs.org/v2/guide/components-custom-events.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6%E7%9A%84-v-model)
 - input元素的value=this.name
