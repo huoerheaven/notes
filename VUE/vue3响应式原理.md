@@ -72,3 +72,26 @@ const data={
 // const data=[1,2,3]
 const proxyData = reactive(data);
 ```
+##### 3. 知识点
+1. set 和 deleteProperty 中需要返回布尔类型的值
+- 在严格模式下，如果返回 false 的话会出现 Type Error 的异常
+2. Proxy 和 Reflect 中使用的receiver
+- Proxy 中 receiver：Proxy 或继承Proxy的对象
+- Reflect 中 receiver：如果target 对象中设置了getter,getter中的this指向receiver
+```js
+const obj={
+    get foo(){
+        return this.bar;
+    }
+}
+const proxy=new Proxy(obj,{
+    get(target,key,receiver){
+        if(key==="bar"){
+            return "value-bar"
+        }
+        return Reflect.get(target,key,receiver);//不加receiver参数：this指向obj;加receiver，this指向receiver
+    }
+})
+console.log(proxy.bar)
+```
+- 
