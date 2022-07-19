@@ -98,7 +98,8 @@ console.log(proxy.bar)
 1. reactive
 - 接收一个参数，判断这个参数是否是对象
 - 创建拦截器对象 handler,设置 get/set/deleteProperty
-- 返回 Proxy 对象
+- 返回 Proxy 对象  
+
 2.实现原理
 ```js
 const isObject = target => target!==null&&typeof target==="object";
