@@ -296,6 +296,11 @@ export const ref=function(raw){
     console.log(total);//2000
 </script>
 ```
+3. reactive vs ref  
+- ref 可以把基本数据类型数据，转成响应式对象
+- ref 返回的对象，重新赋值成对象也是响应式的
+- reactive 返回的对象，重新赋值丢失响应式
+- reactive 返回的对象不可以解构
 
 #### 五、toRefs
 1. 实现原理
