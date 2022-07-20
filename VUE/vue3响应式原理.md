@@ -154,3 +154,233 @@ export const reactive=function(target){
     console.log(obj);// Proxy{name:"yjy"}
 </script>
 ```
+
+#### 三、Effect 
+1. 实现原理
+```js
+const isObject = target => target!==null&&typeof target==="object";
+const convert = target => isObject(target)?reactive(target):target;
+const hasOwnProperty = Array.prototype.hasOwnProperty;
+const hasOwn = (target,key)=> hasOwnProperty.call(target,key);
+
+export const reactive=function(target){
+    if(!isObject(target)) return target;
+    const handler={
+        get(target,key,receiver){
+            //收集依赖
+            track(target,key);
+            const result = Reflect.get(target,key,receiver);
+            return convert(result);
+        },
+        set(target,key,value,receiver){
+            const oldVal = Reflect.get(target,key,receiver);
+            let result = true;
+            if(oldVal!==value){
+                result = Reflect.set(target,key,value,receiver);
+                //触发更新
+                trigger(target,key);
+            }
+            return result;
+        },
+        deleteProperty(target,key){
+            const hasKey = hasOwn(target,key);
+            const result = Reflect.deleteProperty(target,key);
+            if(hasKey&&result){
+                //触发更新
+                trigger(target,key);
+            }
+            return result;
+        }
+    }
+    
+    return new Proxy(target,handler);
+}
+
+let activeEffect = null;//当前活动的effect函数
+export const effect=function(callback){
+    activeEffect = callback;
+    callback();
+    //依赖收集完之后 将activeEffect设置为null
+    activeEffect = null;
+}
+
+let targetMap = new WeakMap();
+//收集依赖
+export const track=function(target,key){
+    if(!activeEffect) return;
+    let depsMap = targetMap.get(target);
+    if(!depsMap){
+        targetMap.set(target,(depsMap=new Map()));
+    }
+    let dep=depsMap.get(key);
+    if(!dep){
+        depsMap.set(key,(dep=new Set()));
+    }
+    dep.add(activeEffect);
+}
+
+//触发更新
+export const trigger=function(target,key){
+    const depsMap = targetMap.get(target);
+    if(!depsMap) return;
+    const dep = depsMap.get(key);
+    if(dep){
+        dep.forEach(effect=>{
+            effect();
+        })
+    }
+}
+```
+2. 使用
+```js
+    import {reactive,effect} from "./reactive/index.js";
+
+    let total;
+    const product = reactive({
+        price:200,
+        count:3
+    });
+
+    effect(()=>{
+        total = product.price*product.count;
+    });
+    console.log(total);//600
+    product.price=400;
+    console.log(total);//1200
+    product.count=5;
+    console.log(total);//2000
+```
+
+#### 四、 ref
+1. 实现原理
+```js
+//ref
+export const ref=function(raw){
+    //判断 raw 是否是ref创建的对象，如果是的话直接返回
+    if(isObject(raw)&&raw.__v_isRef) return raw;
+    //raw不是ref创建的对象，则转换成reactive
+    let value  = convert(raw);
+    let r={
+        __v_isRef:true,
+        get value(){
+            //收集依赖
+            track(r,"value"); 
+            return value;
+        },
+        set value(newVal){
+            if(value===newVal) return ;
+            value=convert(newVal);//重新赋值成对象也是响应式的
+            //触发更新
+            trigger(r,"value");
+        }
+    }
+    return r;
+}
+```
+2. 使用
+```js
+<script type="module">
+    import {reactive,effect,ref} from "./reactive/index.js";
+
+    let total;
+    let price=ref(200);
+    let count=ref(3);
+
+    effect(()=>{
+        total = price.value*count.value;
+    });
+    console.log(total);//600
+    price.value=400;
+    console.log(total);//1200
+    count.value =5;
+    console.log(total);//2000
+</script>
+```
+
+#### 五、toRefs
+1. 实现原理
+```js
+//toRefs
+//接收一个响应式对象，并且对响应式对象的属性赋值成ref对象
+export const toRefs=function(proxy){
+    let ret = proxy instanceof Array ? new Array(proxy.length):{};
+    for(const key in proxy){
+        ret[key] = toProxyRef(proxy,key);
+    }
+    return ret;
+}
+function toProxyRef(proxy,key){
+    const r={
+        __v_isRef:true,
+        get value(){
+            return proxy[key];
+        },
+        set value(newVal){
+            proxy[key]=newVal;
+        }
+    };
+    return r;
+}
+```
+2. 使用
+```js
+<script type="module">
+    import {reactive,effect,toRefs} from "./reactive/index.js";
+
+    let total;
+    function useProduct(){
+        const product=reactive({
+            name:"iphone",
+            price:2000,
+            count:3
+        })
+        return toRefs(product)
+    }
+
+    let {price,count} = useProduct();
+    console.log(price,count)
+
+
+    effect(()=>{
+        total = price.value*count.value;
+    });
+    console.log(total);
+    price.value=400;
+    console.log(total);
+    count.value=5;
+    console.log(total);
+</script>
+```
+
+#### 六、computed
+1. 实现原理
+```js
+//computed
+//computed接收一个有返回值的函数作为参数，函数的返回值就是计算属性的值，并且要监听函数内部使用的响应式数据的变化
+export const computed=function(getter){
+    let result = ref();
+    effect(()=>result.value = getter());
+    return result;
+}
+```
+2. 使用
+```js
+<script type="module">
+    import {reactive,effect,computed} from "./reactive/index.js";
+
+
+    const product = reactive({
+        price:200,
+        count:3
+    });
+
+    let total=computed(()=>{
+        return product.price * product.count;
+    })
+    console.log(total.value);
+    product.price=400;
+    console.log(total.value);
+    product.count=5;
+    console.log(total.value);
+</script>
+```
