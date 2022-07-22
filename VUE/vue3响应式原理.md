@@ -196,12 +196,18 @@ export const reactive=function(target){
     return new Proxy(target,handler);
 }
 
-let activeEffect = null;//当前活动的effect函数
+const effectStack=[];//effect中如果嵌套effect，则使用栈来存储effect
 export const effect=function(callback){
-    activeEffect = callback;
-    callback();
-    //依赖收集完之后 将activeEffect设置为null
-    activeEffect = null;
+    try{
+        activeEffect = callback;
+        effectStack.push(activeEffect);
+        callback();
+    }finally{
+        //依赖收集完之后 将activeEffect设置为null
+        //
+        effectStack.pop();
+        activeEffect = effectStack[effectStack.length-1]
+    }
 }
 
 let targetMap = new WeakMap();
