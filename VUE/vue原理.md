@@ -1,3 +1,200 @@
+#### 一、Vue 响应式数据原理
+1. html文件
+```js
+<body>
+    <div id="app"></div>
+    <script type="module">
+        import Vue from "./src/index.js"
+        let vm = new Vue({
+            el:"#app",
+            data(){
+                return {
+                    a:[{b:1}]
+                }
+            },
+            watch(){}
+
+        });
+
+        //我们开发功能时很少对数组索引进行操作，为了性能考虑不对数组进行拦截
+        //拦截可以改变数组的方法进行操作
+       vm.a
+    </script>
+</body>
+```
+2. 入口文件index.js
+```js
+import { initMixin } from "./init.js";
+
+function Vue(options){
+    this._init(options);
+}
+
+//写成一个个的插件进行对原型的扩展
+initMixin(Vue);
+
+export default Vue;
+```
+3. init.js
+```js
+import { initState } from "./state.js";
+
+export function initMixin(Vue){
+    Vue.prototype._init = function(options){
+        const vm=this;
+        vm.$options=options;
+
+        //初始化状态（将数据做一个初始化的劫持，当我改变数据时应该更新视图）
+        //vue组件中有很多状态 data props watch computed
+        initState(this);
+
+        //vue 核心特性 响应式数据原理
+        //Vue 不是MVVM框架(是一部分，不全是)
+        //MVVM框架：数据变化视图会更新，视图变化数据会被影响，且不能跳过数据去更新视图
+        //vue $ref可以直接操作dom 所以不符合MVVM
+    }
+}
+```
+4. state.js
+```js
+import { observe } from "./observer/index.js";
+import { proxy } from "./util.js";
+
+export function initState(vm){
+    const {props,data,computed,watch,methods} = vm.$options;
+    props&&initProps(vm);
+    data&&initData(vm);
+    watch&&initWatch(vm);
+    computed&&initComputed(vm);
+    methods&&initMethods(vm);
+}
+function initProps(){}
+
+function initData(vm){//数据的初始化操作
+    let data = vm.$options.data;
+    vm._data = data = typeof data === "function"?data.call(vm):data;
+    
+    //当我去vm上取属性时，帮我将属性的取值代理到vm._data上
+    for(let key in data){
+        proxy(vm,"_data",key)
+    }
+    //数据的劫持方案 对象的Object.defineProperty
+    observe(data);
+
+}
+function initComputed(){}
+function initWatch(){}
+function initMethods(){}
+
+```
+5. observer/index.js   数据的劫持方案
+```js
+import { observe } from "./observer/index.js";
+import { proxy } from "./util.js";
+
+export function initState(vm){
+    const {props,data,computed,watch,methods} = vm.$options;
+    props&&initProps(vm);
+    data&&initData(vm);
+    watch&&initWatch(vm);
+    computed&&initComputed(vm);
+    methods&&initMethods(vm);
+}
+function initProps(){}
+
+function initData(vm){//数据的初始化操作
+    let data = vm.$options.data;
+    vm._data = data = typeof data === "function"?data.call(vm):data;
+    
+    //当我去vm上取属性时，帮我将属性的取值代理到vm._data上
+    for(let key in data){
+        proxy(vm,"_data",key)
+    }
+    //数据的劫持方案 对象的Object.defineProperty
+    observe(data);
+
+}
+function initComputed(){}
+function initWatch(){}
+function initMethods(){}
+```
+6. array.js 对数组单独进行处理
+```js
+import { arrayMethods } from "./array.js";
+
+class Observer{
+    constructor(value){
+        //使用defineProperty重新定义属性
+
+        //判断一个对象是否被观测过看他有没有 __obj__这个属性
+        Object.defineProperty(value,"__ob__",{
+            enumerable:false,
+            configurable:false,
+            value:this
+        })
+
+        if(Array.isArray(value)){
+            //函数劫持，切片编程
+            //我希望调用push shift unshift pop reverse sort splice
+            value.__proto__ = arrayMethods;
+            //观测数组中的对象类型，对象变化也要做一点事情
+            this.observeArray(value);
+        }
+        else this.walk(value);
+        
+
+    }
+    walk(data){
+        let keys = Object.keys(data);
+        keys.forEach(key=>{
+            defineReactive(data,key,data[key]);//Vue.util.defineReactive
+        })
+    }
+    observeArray(value){
+        value.forEach(v=>{
+            observe(v)
+        })
+    }
+}
+function defineReactive(data,key,value){
+    observe(value);
+    Object.defineProperty(data,key,{
+        get(){
+            console.log("取值");
+            return value;
+        },
+        set(newV){
+            console.log("设置值",data,key,value );
+            if(newV===value) return;
+            observe(newV);//如果用户将值改为对象继续监控
+            value = newV;
+        }
+    })
+}
+
+export function observe(data){
+    if(typeof data !=="object" || data===null){
+        return data;
+    }
+    if(data.__obj__) return data;
+    return new Observer(data);
+}
+```
+7. util.js 工具方法文件
+```js
+export function proxy(vm,data,key){
+    Object.defineProperty(vm,key,{
+        get(){
+            return vm[data][key];
+        },
+        set(newV){
+            vm[data][key] = newV;
+        }
+    })
+}
+```
+
+#### 二、 通过snabbdom学习diff算法
 ##### 1. 通过 snabbdom 学习 vdom
 - [snabbdom](https://github.com/snabbdom/snabbdom)
 - 两个js对象做diff   [jiff](https://github.com/cujojs/jiff)
