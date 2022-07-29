@@ -194,7 +194,10 @@ export function proxy(vm,data,key){
 }
 ```
 
-#### 二、 通过snabbdom学习diff算法
+#### 二、 Vue模板渲染
+
+#### 三、 通过snabbdom学习diff算法
+
 ##### 1. 通过 snabbdom 学习 vdom
 - [snabbdom](https://github.com/snabbdom/snabbdom)
 - 两个js对象做diff   [jiff](https://github.com/cujojs/jiff)
