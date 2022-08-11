@@ -355,3 +355,72 @@ export default{
 1. 变量来源不明确，不利于阅读
 2. 多mixin可能造成命名冲突
 3. mixin和组件可能出现多对多的关系，复杂度高
+
+#### vue 组件中的data为什么是一个函数
+- [https://www.cnblogs.com/Leophen/p/13805550.html]();
+
+#### v-model 的实现原理及如何自定义 v-model
+-[https://blog.csdn.net/qq_42072086/article/details/108071825]();
+-[https://v2.cn.vuejs.org/v2/guide/components-custom-events.html]();
+
+#### v-htmk指令可能导致的问题
+- 可能会导致 xss 攻击
+- v-html 会替换掉标签内部的子元素
+- 其他 [https://blog.csdn.net/qq_40413670/article/details/118295470]();
+
+#### Vue 父子组件生命周期调用顺序
+- 加载渲染过程：父beforeCreate->父created->父beforeMount->子beforeCreate->子cerated->子beforeMount->子mounted->父Mounted
+- 子组件更新过程： 父beforeUpdate->子beforeUpdate->子updated->父updated
+- 父组件更新过程：父beforeUpdate->父updated
+- 销毁过程：父beforeDestroy->子beforeDestroy->子destroyed->父destroyed
+- 理解
+- - 组件的调用顺序都是先父后子，渲染完成的顺序是先子后父
+- - 组件的销毁操作时先父后子，销毁完成的顺序是先子后父
+
+#### Vue组件如何通信？单向数据流
+- 父子间通信 父->子通过props,子->父通过$on $emit（发布订阅）
+- 获取父子组件实例的方法 $parent $children
+- 在父组件中提供数据子组件进行消费 Provide inject插件】
+- Ref获取实例的方式 调用组件的属性或者方法
+- Event Bus实现跨组件通信 
+- Vuex 状态管理实现通信 
+
+#### 为什么要使用异步组件
+- 如果组件功能多打包出的结果会变大，可以采用异步的方式来加载组件。主要依赖import()这个语法，可以实现文件的分割加载
+- 异步组件是一个函数
+
+#### 插槽和作用域插槽的区别
+- [https://zhuanlan.zhihu.com/p/255241094]();
+
+#### Vue中常见的性能优化
+1. 编码优化
+- 不要将所有的数据都放在data中，data中的数据都会增加getter和setter,会收集对应的watcher
+- vue 在v-for时给每项元素绑定事件需要用事件代理
+- SPA页面采用keep-alive缓存组件
+- 拆分组件（提高复性、增加代码的可维护性，减少不必要的渲染）
+- v-if 当值为false时内部指令不会执行，具有阻断功能，很多情况下使用v-if代替v-show
+- key保证唯一性（默认vue会采用就地复用策略）
+- Object.freeze 冻结数据
+- 合理使用路由懒加载、异步组件
+- 尽量使用runtime运行时版本
+- 数据持久化的问题（防抖、节流）
+- 监听的事件或定时器在组件销毁时解绑或清除  
+2. Vue加载性能优化
+- 第三方模块按需导入（babel-plugin-component）
+- 滚动到可视区域动态加载（vue-virtual-scroll-list）
+- 图片懒加载（vue-lazyload）
+3. 用户体验
+- app-skeleton骨架屏
+- app-shell app壳
+- pwa service worker 离线缓存
+4. SEO优化
+- 预渲染插件 prerender-spa-plugin 
+- 服务端渲染 ssr
+5. 打包优化
+- 使用cdn方式加载第三方模块
+- 多线程打包 happypack
+- splitChunks 抽离公共文件
+- sourceMap 生成
+6. 缓存，压缩
+- 客户端缓存 服务端缓存
+- 服务端gzip压缩
