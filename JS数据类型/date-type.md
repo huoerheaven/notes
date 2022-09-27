@@ -63,3 +63,21 @@ Object.prototype.toString(); //'[object Object]'
 Object.prototype.toString.call(Boolean.prototype); //'[object Boolean]'
 ```
 
+###### 6.鸭子类型检测
+- 原理：检查自身属性的类型或者执行结果的类型
+- 例子：kindOf与p-is-promise
+- 总结：候选方案
+
+###### 7. Symbol.toStringTag
+- 原理：Object.prototype.toString会读取该值
+- 适用场景：需自定义类型
+- 注意事项：兼容性
+```js
+class MyArray{
+ get [Symbol.toStringTag](){
+  return "MyArray"
+ }
+}
+let a = new MyArray();
+console.log(Object.prototype.toString.call(a));//[object MyArray]
+```
