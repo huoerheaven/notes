@@ -81,3 +81,25 @@ class MyArray{
 let a = new MyArray();
 console.log(Object.prototype.toString.call(a));//[object MyArray]
 ```
+
+###### 8.等比较
+- 原理：与某个固定值进行比较
+- 使用场景：undefined,window,document,null
+```js
+const isUndefined = function(obj){
+ return obj === void 0;//void 0 === undefined
+}
+```
+
+###### 9.总结
+
+|方法                |基础数据类型 |引用类型 |注意事项 |
+|:-:                |:-:          |:-:     |:-:|
+|typeof             |√            |×       |NaN,null,document.all |
+|constructor        |√ 部分       |√        |可以被改写 |
+|instanceof         |×            |√       |多窗口，右边构造函数或者class |
+|isPrototypeOf      |×            |√       |null和undefined无此方法 |
+|toString           |√            |√       |小心内置原型 |
+|鸭子类型            |---          |√       |不得已或者兼容 |
+|Symbol.toStringTag |×            |√       |识别自定义对象 |
+|等比较              |√            |√       |特殊对象 |
