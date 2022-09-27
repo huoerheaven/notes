@@ -22,3 +22,44 @@
 ```
 - 无符号右移运算符
 - - 按二进制形式把所有的数字向右移动对应位数，低位移出(舍弃)，高位的空位补零。对于正数来说和带符号右移相同，对于负数来说不同。
+#### 3. parseInt()
+```js
+["1","2","3"].map((val,index)=>parseInt(val,index));
+parseInt("1",0); //1
+parseInt("2",1); //NaN
+parseInt("3",2); ////NaN
+```
+- 参数一：必需，要被解析的字符串；
+- 参数二：可选，表示要解析的数字的基数。该值介于 2 ~ 36 之间。（几进制）
+
+#### 4. 数据类型8种判断方式
+###### 1. typeof
+- 主要用途：操作数的类型，只能识别基础数据类型和引用类型
+- 特别注意：null,NaN,document.all
+```js
+typeof null === "object"
+typeof NaN === "number"
+typeof document.all === "undefined"
+```
+- 注意事项：已经不是绝对安全（暂时性死区）
+
+###### 2. constructor
+- 原理：constructor指向创建实例对象的构造函数
+- 注意事项1：null和undefined没有构造函数
+- 注意事项2：constructor可以被改写
+
+###### 3. instanceof
+- 原理：就是在原型链上查找，查到即是其实例
+- 注意事项1：右操作数必须是函数或者class
+- 注意事项2：多全局对象，多window之间会出现此Array非彼Array的情况，比如iframe
+
+###### 4. isPrototypeOf()
+- 原理：是否出现在实例对象的原型链上
+- 注意事项：**能正常返回值**的情况，基本等同于instanceof
+
+###### 5. Object.prototype.toString
+```js
+Object.prototype.toString(); //'[object Object]'
+Object.prototype.toString.call(Boolean.prototype); //'[object Boolean]'
+```
+
