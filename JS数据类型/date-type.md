@@ -103,3 +103,29 @@ const isUndefined = function(obj){
 |鸭子类型            |---          |√       |不得已或者兼容 |
 |Symbol.toStringTag |×            |√       |识别自定义对象 |
 |等比较              |√            |√       |特殊对象 |
+
+
+#### 5. NaN和Number.NaN
+###### 特点
+- 特点1：typeof NaN === "number"  typeof Number.NaN === "number"
+- 特点2：NaN != NaN  Number.NaN != Number.NaN
+- 特点3：不能被删除
+###### isNaN
+- 当我们向isNaN传递一个参数，它的本意是通过Number()方法尝试转换参数的类型为Number，如果转换成功返回false，否则转返回true，它只是判断这个参数能否转成数字而已，并不是判断是否严格等于NaN
+###### Number.isNaN
+- 判断一个值是否是数字，并且值等于NaN(是否严格等于NaN)
+###### Object.is()
+- 判断两个值是否为同一个值
+```js
+NaN == NaN  //false
+Object.is(NaN,NaN)  //true
+
++0 == -0  //true
+Object.is(+0,-0)  //false
+```
+###### other
+```js
+let arr=[NaN];
+arr.indexOf(NaN);//-1
+arr.includes(Nan);//true
+```
