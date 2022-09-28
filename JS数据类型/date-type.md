@@ -214,3 +214,45 @@ function format_with_substring(number){
 }
 console.log(format_with_substring(2345678.234));//2,345,678.234
 ```
+
+#### 7. []+[],[]+{},{}+[],{}+{}
+###### 本质：二元操作符+的规则
+- 如果操作符是对象，则对象会转换为原始值
+- 如果其中一个操作数是字符串的话，另一个操作数也会转换成字符串，进行字符串连接
+- 否则，两个操作数都将转换成数字或NaN,进行加法操作
+###### 对象转为原始数据类型的值 （以下为相关方法，按优先级排列，2，3如果返回的不是原子，继续调用下一个方法，直到返回原子）
+- Symbol.ToPrimitive
+- Object.prototype.valueOf
+- Object.prototype.toString
+###### []+[]
+```js
+typeof [][Symbol.ToPrimitive]  //undefuned
+[].valueOf()   //[],不是原子
+[].toString()   //""
+//结论：
+[]+[]=""
+```
+###### []+{}
+```js
+typeof {}[Symbol.ToPrimitive]  //undefuned
+{}.valueOf()   //{},不是原子
+{}.toString()   //"[object Object]"
+//结论：
+[]+{}="[object Object]"
+```
+###### {}+[]
+```js
+{}+[] = {};+[]
++[]=0;
+//结论：
+[]+{}=0
+```
+###### {}+{}
+```js
+
+//chrome结论：
+{}+{} = ({}+{}) = "[object Object][object Object]"
+//其他浏览器
+{}+{}={};+{}=+ "[object Object]"=NaN
+```
+
