@@ -12,6 +12,7 @@ for(let i=3;i<=20;i++){
 ```js
 /**
  * 斐波那契数列（递归）
+ * 时间复杂度O（2^n） 不可用
  * @param {*} n 
  * @returns 
  */
@@ -23,6 +24,28 @@ function fibonacci(n){
 
 //test
 console.log(fibonacci(10));//55
+```
+```js
+/**
+ * 斐波那契数列（循环）
+ * @param {*} n 
+ * @returns 
+ */
+ function fibonacci(n){
+    if(n<=0) return 0;
+    if(n===1) return 1;
+    let n1=1;//记录n-1的结果
+    let n2=0//记录n-2的结果
+    let res=0;
+    for(let i=2;i<=n;i++){
+        res=n1+n2;
+        //记录中间结果
+        n2=n1;
+        n1=res;
+    }
+    return res;
+}
+
 ```
 #### 二、数组的方法
 1. push
