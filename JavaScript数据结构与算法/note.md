@@ -1,6 +1,6 @@
 #### 一、斐波那契数列
 > 1,2,3,5,8,13...(斐波那契数列第一个数字是1，第二个是2，从第三项开始，每一项都等于前两项之和)
-```
+```js
 let fibonacci = [];
 //省略fibonacci[0]
 fibonacci[1]=1;
@@ -8,6 +8,21 @@ fibonacci[2]=2;
 for(let i=3;i<=20;i++){
   fibonacci[i] = fibonacci[i-1]+fibonacci[i-2]
 }
+```
+```js
+/**
+ * 斐波那契数列（递归）
+ * @param {*} n 
+ * @returns 
+ */
+function fibonacci(n){
+    if(n<=0) return 0;
+    if(n===1) return 1;
+    return fibonacci(n-1)+fibonacci(n-2);
+}
+
+//test
+console.log(fibonacci(10));//55
 ```
 #### 二、数组的方法
 1. push
