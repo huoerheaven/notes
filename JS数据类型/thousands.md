@@ -1,3 +1,4 @@
+##### 千分位
 ```js
 function format_with_mod(number){
     let n=number;
@@ -71,4 +72,53 @@ function format_with_substring(number){
 }
 console.log(format_with_substring(2345678.234));//2,345,678.234
 
+```
+```js
+/**
+ * 千分位格式化（使用数组）
+ * @param {*} n number
+ */
+function format1(n){
+    n=Math.floor(n);//只考虑整数
+    const s=n.toString();
+    const arr= s.split("").reverse();
+    return arr.reduce((str,val,index)=>{
+        if(index%3===0){
+            if(str){
+                return val+","+str;
+            }else{
+                return val+str;
+            }
+        }else{
+            return val+str;
+        }
+    },"");
+}
+
+/**
+ * 千分位格式化（字符串）
+ * @param {*} n 
+ */
+function format2(n){
+    n=Math.floor(n);//只考虑整数
+    const s=n.toString();
+    const length = s.length;
+    let res="";
+    for(let i=length-1;i>=0;i--){
+        let j=length-i;
+        if(j%3===0){
+            if(i===0){
+                res=s[i]+res;
+            }else{
+                res=","+s[i]+res;
+            }
+        }else{
+            res=s[i]+res;
+        }
+    }
+    return res;
+}
+
+console.log(format1(1234567800));//1,234,567,800
+console.log(format2(1234567800));//1,234,567,800
 ```
