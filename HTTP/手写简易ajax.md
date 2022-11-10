@@ -33,4 +33,5 @@ function Ajax(url){
     })
 };
 Ajax("/data/data.json").then().catch();
+
 ```
